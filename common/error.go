@@ -8,10 +8,10 @@ const (
 
 	// <======Sign error code======>
 
-	//CodeNotFoundClientID not found clientID error code
-	CodeNotFoundClientID = iota
-	//CodeNotFoundSign not found sign error code
-	CodeNotFoundSign
+	//CodeMissingClientID not found clientID error code
+	CodeMissingClientID = iota
+	//CodeMissingSign not found sign error code
+	CodeMissingSign
 	//CodeInvalidClientID invalid clientID error code
 	CodeInvalidClientID
 	//CodeInvalidSign invalid sign error code
@@ -23,26 +23,42 @@ const (
 	CodeReplayAttack
 	//CodeTimestampFormat timstamp format not use RCF3339
 	CodeTimestampFormat
+	//CodeRequestExpired request expired
+	CodeRequestExpired
 )
 
-//ErrorFormater error formater
-//type func(string, string)
-var ErrorFormater = func(code string, msg string) string {
-	return fmt.Sprintf("{\"code\":\"%s\", \"msg\":\"%s\"}", code, msg)
+//IError custom error interface
+type IError interface {
+	GetCode() string
+	GetMsg() string
 }
 
 //BaseError base error
 type BaseError struct {
-	Msg  string
-	Code int
+	msg         string
+	code        int
+	description string
+}
+
+//NewError create a error
+func NewError(code int, msg string) error {
+	return &BaseError{
+		msg:  msg,
+		code: code,
+	}
 }
 
 //GetCode get error code and format it
 func (b *BaseError) GetCode() string {
-	return fmt.Sprint(CodeSignFormater, b.Code)
+	return fmt.Sprint(CodeSignFormater, b.code)
+}
+
+//GetMsg get error msg
+func (b *BaseError) GetMsg() string {
+	return b.msg
 }
 
 //Error return format error string
 func (b *BaseError) Error() string {
-	return ErrorFormater(b.GetCode(), b.Msg)
+	return ErrorFormater(b)
 }

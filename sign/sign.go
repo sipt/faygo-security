@@ -55,8 +55,8 @@ func Sign(params map[string]string, provider ISignProvider) (interface{}, string
 	//take out keys
 	keys := make([]string, 0)
 	var k string
-	for k := range params {
-		if inclueName(k) {
+	for k, v := range params {
+		if inclueName(k) && v != "" {
 			keys = append(keys, k)
 		}
 	}

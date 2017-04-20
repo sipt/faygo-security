@@ -1,11 +1,17 @@
 package protect
 
-import "errors"
+import "github.com/sipt/faygo-security/common"
 
 var (
 	//ErrorReplayAttack replay attack
-	ErrorReplayAttack = errors.New("request invalid")
+	//replay request to server
+	ErrorReplayAttack = common.NewError(common.CodeReplayAttack, "request invalid")
 
 	//ErrorTimestampFormat timestamp format not use RCF3339
-	ErrorTimestampFormat = errors.New("request params timestamp invalid")
+	ErrorTimestampFormat = common.NewError(common.CodeTimestampFormat, "request params timestamp invalid")
+
+	//ErrorRequestExpired request expired
+	//request expired
+	//The clinet and server have time difference. Server return
+	ErrorRequestExpired = common.NewError(common.CodeRequestExpired, "request expired")
 )

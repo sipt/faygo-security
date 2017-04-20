@@ -25,7 +25,7 @@ func CheckRequestValidity(timestamp, nonce string, provider IProtectProvider) (b
 	}
 	now := time.Now()
 	if now.Sub(requestTime) > GlobalConfig.ValidTime {
-		return false, ErrorReplayAttack
+		return false, ErrorRequestExpired
 	}
 	isExist, err := provider.IsExist(timestamp, nonce)
 	if err != nil {

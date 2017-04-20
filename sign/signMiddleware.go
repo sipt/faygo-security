@@ -2,6 +2,7 @@ package sign
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/sipt/faygo-security/common"
 )
 
 const (
@@ -32,7 +33,7 @@ func NewSignMiddleware(provider ISignProvider) gin.HandlerFunc {
 		}
 		clientData, _, err := CheckSign(params, provider)
 		if err != nil {
-			ctx.String(400, err.Error())
+			ctx.JSON(422, common.Pack(ctx, err))
 		} else {
 			ctx.Set(NameClientData, clientData)
 			ctx.Next()

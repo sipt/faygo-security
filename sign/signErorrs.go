@@ -1,17 +1,19 @@
 package sign
 
-import "errors"
+import (
+	"github.com/sipt/faygo-security/common"
+)
 
 var (
 	//ErrorMissingClientID missing clientID in params
-	ErrorMissingClientID = errors.New("missing clientID")
+	ErrorMissingClientID = common.NewError(common.CodeMissingClientID, "missing clientID")
 
 	//ErrorMissingSign missing sign in params
-	ErrorMissingSign = errors.New("missing sign")
+	ErrorMissingSign = common.NewError(common.CodeMissingSign, "missing sign")
 
 	//ErrorInvalidClientID Invalid clientID by provider
-	ErrorInvalidClientID = errors.New("invalid clientID")
+	ErrorInvalidClientID = common.NewError(common.CodeInvalidClientID, "invalid clientID")
 
 	//ErrorInvalidSign sign is error
-	ErrorInvalidSign = errors.New("invalid sign")
+	ErrorInvalidSign = common.NewError(common.CodeInvalidSign, "invalid sign")
 )
