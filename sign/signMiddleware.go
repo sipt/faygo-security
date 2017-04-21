@@ -12,7 +12,6 @@ const (
 
 //NewSignMiddleware new sign middleware
 func NewSignMiddleware(provider ISignProvider) gin.HandlerFunc {
-
 	return func(ctx *gin.Context) {
 		params := make(map[string]string)
 
@@ -33,6 +32,7 @@ func NewSignMiddleware(provider ISignProvider) gin.HandlerFunc {
 		}
 		clientData, _, err := CheckSign(params, provider)
 		if err != nil {
+			common.Error(err.Error())
 			ctx.JSON(422, common.Pack(ctx, err))
 		} else {
 			ctx.Set(NameClientData, clientData)

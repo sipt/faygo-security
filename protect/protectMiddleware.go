@@ -21,11 +21,15 @@ func NewProtectMiddleware(provider IProtectProvider) gin.HandlerFunc {
 		nonce := ctx.Param(NameNonce)
 		_, err := CheckRequestValidity(timestamp, nonce, provider)
 		if err != nil {
+			common.Error(err.Error())
 			provider.DealWithError(ctx, err)
-			ctx.JSON(422, common.Pack(ctx,
-				gin.H{
+			var data interface{}
+			if err == ErrorRequestExpired {
+				data = gin.H{
 					"timestamp": time.Now().Format(time.RFC3339),
-				}, err))
+				}
+			}
+			ctx.JSON(422, common.Pack(ctx, data, err))
 		}
 		ctx.Next()
 	}

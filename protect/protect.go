@@ -1,6 +1,8 @@
 package protect
 
-import "time"
+import (
+	"time"
+)
 
 var (
 	//GlobalConfig protect config
