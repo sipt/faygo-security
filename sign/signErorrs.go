@@ -16,4 +16,7 @@ var (
 
 	//ErrorInvalidSign sign is error
 	ErrorInvalidSign = common.NewError(common.CodeInvalidSign, "invalid sign")
+
+	//ErrorSkipSign sign skip for test
+	ErrorSkipSign = common.NewError(common.CodeInvalidSign, "skip sign")
 )
