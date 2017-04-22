@@ -19,12 +19,26 @@ const (
 //CheckSign check sign validity
 func CheckSign(params map[string]string, provider ISignProvider) (interface{}, bool, error) {
 	//check request sign exist
+	clientID := params[NameClientID]
+	if stringIsEmpty(clientID) {
+		return nil, false, ErrorMissingClientID
+	}
+	clientInfo, err := provider.GetClientSecret(clientID)
+	if err != nil {
+		return nil, false, err
+	}
+	if clientInfo == nil {
+		return nil, false, ErrorInvalidClientID
+	}
+	if clientInfo.IsTest {
+		return nil, true, nil
+	}
 	clientSign := params[NameSign]
 	if stringIsEmpty(clientSign) {
 		return nil, false, ErrorMissingSign
 	}
 	//sign other params
-	clientData, sign, err := Sign(params, provider)
+	clientData, sign, err := Sign(params, clientInfo)
 	if err != nil {
 		return nil, false, err
 	}
@@ -36,20 +50,13 @@ func CheckSign(params map[string]string, provider ISignProvider) (interface{}, b
 }
 
 //Sign sign all params
-func Sign(params map[string]string, provider ISignProvider) (interface{}, string, error) {
+func Sign(params map[string]string, clientInfo *ClientInfo) (interface{}, string, error) {
 	//check params integrity
 	clientID := params[NameClientID]
 	if stringIsEmpty(clientID) {
 		return nil, "", ErrorMissingClientID
 	}
-	if stringIsEmpty(params[NameSign]) {
-		return nil, "", ErrorMissingSign
-	}
-	clientInfo, err := provider.GetClientSecret(clientID)
-	if err != nil {
-		return nil, "", err
-	}
-	if clientInfo == nil || stringIsEmpty(clientInfo.ClientSecret) {
+	if stringIsEmpty(clientInfo.Secret) {
 		return nil, "", ErrorInvalidClientID
 	}
 	//take out keys
@@ -71,9 +78,11 @@ func Sign(params map[string]string, provider ISignProvider) (interface{}, string
 		signStr += fmt.Sprint(k, "=", params[k])
 	}
 	//splice clientSecret to signStr
-	signStr += fmt.Sprint("&key=", clientInfo.ClientSecret)
+	signStr += fmt.Sprint("&key=", clientInfo.Secret)
 	sign, err := md5Encode(signStr)
-	return clientInfo.Data, sign, err
+	fmt.Println("sign before:", signStr)
+	fmt.Println("sign:", sign)
+	return clientInfo, sign, err
 }
 
 func md5Encode(src string) (string, error) {

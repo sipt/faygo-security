@@ -34,9 +34,9 @@ func NewSignMiddleware(provider ISignProvider) gin.HandlerFunc {
 		if err != nil {
 			common.Error(err.Error())
 			ctx.JSON(422, common.Pack(ctx, err))
+			ctx.Abort()
 		} else {
 			ctx.Set(NameClientData, clientData)
-			ctx.Next()
 		}
 	}
 }

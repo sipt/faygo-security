@@ -50,7 +50,7 @@ func NewError(code int, msg string) error {
 
 //GetCode get error code and format it
 func (b *BaseError) GetCode() string {
-	return fmt.Sprint(CodeSignFormater, b.code)
+	return fmt.Sprintf(CodeSignFormater, b.code)
 }
 
 //GetMsg get error msg
