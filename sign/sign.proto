@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message ClientInfo {
+    string secret = 1;
+    bool isTest = 2;
+    string platform = 3;
+}
